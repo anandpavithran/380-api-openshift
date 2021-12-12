@@ -1,0 +1,22 @@
+  show
+  curl -k https://api.ocp4.example.com:6443/api
+  find route of OAUTH pod
+  oc get route -n openshift-authentication
+  Authenticate with OAuth server -ENTER PASSWORD -TAKE TOKEN
+  curl -u admin -kv "https://$ROUTE/oauth/authorize?client_id=openshift-challenging-client&response_type=token"
+  INITIALIZE VARIABLE
+  TOKEN=value
+  HEADER="Authorization: Bearer $TOKEN"
+  Attempt guest request
+  curl -k --header "$HEADER" -X GET https://api.ocp4.example.com:6443/api
+  LIST V1 API
+  curl -k --header "$HEADER" -X GET https://api.ocp4.example.com:6443/api/v1
+  LIST POD RESOUCRES
+  curl -k --header "$HEADER" -X GET https://api.ocp4.example.com:6443/api/v1/pods
+curl -k --header "$HEADER" -X GET https://api.ocp4.example.com:6443/api/v1/pods/ | jq ".items[].metadata.name"
+LOCATE API ENDPOINT FOR ROUTE
+oc explain route
+will see route and routes/status
+curl -k --header "$HEADER" -X GET https://api.ocp4.example.com:6443/apis/route.openshift.io/v1
+LIST HOSTS FOR ALL ROUTES
+curl -k --header "$HEADER" -X GET https://api.ocp4.example.com:6443/apis/route.openshift.io/v1/routes | jq '.items[].spec.host'
